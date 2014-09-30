@@ -19,18 +19,18 @@
 					<li class="active"><a href="#">Home</a></li>
 					<li class=""><a href="#test">Cours</a></li>
 					<li class="dropdown">
-						<a class="dropdown-toogle" data-toggle="dropdown" href="#">
+						<a class="dropdown-toogle" data-toggle="dropdown" href="javascrip:void(0)">
 							Cours <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li ng-repeat="chapter in map.content" on-finish-render="fix-menu">
-								<a href="#{{'/' + map.path + '/' + chapter.path}}">{{chapter.title}}</a>
+							<li ng-repeat="lesson in cours.content" on-finish-render="fix-menu">
+								<a href="#{{'/' + cours.path + '/' + lesson.path}}">{{lesson.title}}</a>
 							</li>
 						</ul>
 					</li>
 
 					<li class="visible-xs dropdown">
-						<a class="dropdown-toogle" data-toggle="dropdown" href="#">
+						<a class="dropdown-toogle" data-toggle="dropdown" href="javascrip:void(0)">
 							{{map.title}} <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -41,7 +41,7 @@
 					</li>
 
 					<li class="dropdown">
-						<a class="dropdown-toogle" data-toggle="dropdown" href="#">
+						<a class="dropdown-toogle" data-toggle="dropdown" href="javascrip:void(0)">
 							Help <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -61,7 +61,7 @@
 		<ol class="breadcrumb">
 			<li></li>
 			<li ng-repeat="name in breadcrumb">
-				<a href="{{breadcrumb_href($index)}}">{{hash[name]}}</a>
+				<a href="{{breadcrumb_href($index)}}">{{hash[name] || 'Cours'}}</a>
 			</li>
 		</ol>
 	</div>

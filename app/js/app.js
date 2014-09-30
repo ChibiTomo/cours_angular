@@ -21,6 +21,15 @@ function fixXsMenu() {
 	});
 }
 
+function build_hash(data) {
+	var result = {};
+	for (var i = 0; i < data.content.length; i++) {
+		result[data.content[i].path] = data.content[i].title;
+	}
+	result[data.path] = data.title;
+	return result;
+}
+
 /*
 $(document).ready(function() {
 	});
@@ -67,24 +76,14 @@ $(document).ready(function() {
 		};
 	}]);
 
-
-	function build_hash(data) {
-		var result = {};
-		for (var i = 0; i < data.content.length; i++) {
-			result[data.content[i].path] = data.content[i].title;
-		}
-		result[data.path] = data.title;
-		return result;
-	}
-
 	app.controller('MyAppController', ['$scope','$http', function($scope, $http) {
-		$scope.now = new Date();
-		scope = $scope;
-		$scope.window = window;
-
 		$scope.update_breadcrumb = function() {
 			$scope.breadcrumb = window.location.hash.split('/').slice(1);
 
+			if (!$scope.map) {
+				return;
+			}
+			
 			var content_path = $scope.map.content.map(function(x) {return x.path;});
 			var last = content_path.slice(0).pop();
 			var index = content_path.indexOf(last);
@@ -97,6 +96,22 @@ $(document).ready(function() {
 				$scope.next = 'data/' + content_path[index + 1] + '.html';
 			}
 		}
+		
+		$scope.getData = function(url) {
+			$http.get(url)
+				.success(function(data) {
+					$scope.map = data;
+					$scope.hash = build_hash(data);
+					$scope.update_breadcrumb();
+				})
+				.error(function() {
+					alert('Cannot find "' + url + '"...');
+				});
+		};
+		
+		$scope.now = new Date();
+		scope = $scope;
+		$scope.window = window;
 
 		$scope.breadcrumb_href = function(index) {
 			return '#/' + $scope.breadcrumb.slice(0, index + 1).join('/');
@@ -105,24 +120,14 @@ $(document).ready(function() {
 		$scope.$on('fix-menu', function() {
 			fixXsMenu();
 		});
-/*
+
 		$http.get('data/cours.json')
 			.success(function(data) {
 				$scope.cours = data;
 			})
 			.error(function() {
-				alert('Cannot find map...');
+				alert('Cannot find cours...');
 			});
-
-		$http.get('data/map.json')
-			.success(function(data) {
-				$scope.map = data;
-				$scope.hash = build_hash(data);
-			})
-			.error(function() {
-				alert('Cannot find map...');
-			});
-*/
 	}]);
 
 	app.config(['$routeProvider', function($routeProvider) {
@@ -130,8 +135,17 @@ $(document).ready(function() {
 				.when('/', {
 					templateUrl: 'partials/cover.html'
 				})
-				.when('/cours_angularjs/:chapter', {
-					templateUrl: 'partials/chapter.html',
+				.when('/cours', {
+					templateUrl: 'partials/lessons_list.html',
+					controller: 'LessonController'
+				})
+				.when('/cours/:lesson', {
+					redirectTo: function(params) {
+						return '/cours/' + params.lesson + '/chapter0';
+					}
+				})
+				.when('/cours/:lesson/:chapter', {
+					templateUrl: 'partials/lesson_content.html',
 					controller: 'ChapterController'
 				})
 				.otherwise({
