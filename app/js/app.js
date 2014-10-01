@@ -30,11 +30,6 @@ function build_hash(data) {
 	return result;
 }
 
-/*
-$(document).ready(function() {
-	});
-	*/
-
 (function() {
 	angular.module('myUtilities', [])
 	.directive("myInclude", function() {
@@ -85,15 +80,24 @@ $(document).ready(function() {
 			}
 			
 			var content_path = $scope.map.content.map(function(x) {return x.path;});
-			var last = content_path.slice(0).pop();
-			var index = content_path.indexOf(last);
-
+			var parent_breadcrumb = $scope.breadcrumb.slice(0);
+			
+			var current = parent_breadcrumb.pop();
+			var index = content_path.indexOf(current);
+			
+			
+			$scope.chapter_previous = undefined;
 			if (index > 0) {
-				$scope.previous = 'data/' + content_path[index - 1] + '.html';
+				var tmp = parent_breadcrumb.slice(0);
+				tmp.push(content_path[index - 1]);
+				$scope.chapter_previous = '#/' + tmp.join('/');
 			}
 
-			if (index < content_path.length) {
-				$scope.next = 'data/' + content_path[index + 1] + '.html';
+			$scope.chapter_next = undefined;
+			if (index < content_path.length - 1) {
+				var tmp = parent_breadcrumb.slice(0);
+				tmp.push(content_path[index + 1]);
+				$scope.chapter_next = '#/' + tmp.join('/');
 			}
 		}
 		
