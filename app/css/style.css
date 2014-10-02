@@ -12,6 +12,13 @@ html {
 
 	border-bottom: 1px solid #DDDDDD;
 }
+
+@media (max-width: 768px) {
+	.header_breadcrumb .breadcrumb {
+		line-height: 30px;
+	}
+}
+
 .header_breadcrumb .breadcrumb {
 	margin: 0px;
 }

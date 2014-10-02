@@ -40,7 +40,8 @@
 							{{map.title}} <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li ng-repeat="chapter in map.content" on-finish-render="fix-menu">
+							<li ng-repeat="chapter in map.content" on-finish-render="fix-menu"
+								ng-class="{active: path.startsWith('/cours/' + map.path + '/' + chapter.path)}">
 								<a href="{{'#/cours/' + map.path + '/' + chapter.path}}">{{chapter.title}}</a>
 							</li>
 						</ul>
@@ -72,3 +73,7 @@
 		</ol>
 	</div>
 </header>
+
+<script>
+	$(document).ready(fixHeaderHeight);
+</script>
