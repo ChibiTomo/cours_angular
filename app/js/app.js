@@ -129,13 +129,12 @@ function build_hash(data) {
 					templateUrl: 'partials/cover.html'
 				})
 				.when('/cours', {
-					templateUrl: 'partials/lessons_list.html',
+					templateUrl: 'partials/lesson_list.html',
 					controller: 'LessonController'
 				})
 				.when('/cours/:lesson', {
-					redirectTo: function(params) {
-						return '/cours/' + params.lesson + '/chapter0';
-					}
+					templateUrl: 'partials/chapter_list.html',
+					controller: 'ChapterController'
 				})
 				.when('/cours/:lesson/:chapter', {
 					templateUrl: 'partials/lesson_content.html',

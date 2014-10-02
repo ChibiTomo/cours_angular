@@ -25,7 +25,6 @@ function fixHeaderHeight() {
 	var height = $('.header_breadcrumb').css('height');
 
 	$('.container-fluid').css('padding-top', height);
-	console.log(height);
 }
 
 (function() {
