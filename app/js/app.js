@@ -1,3 +1,10 @@
+if (typeof String.prototype.startsWith != 'function') {
+	// see below for better implementation!
+	String.prototype.startsWith = function(str) {
+		return this.indexOf(str) == 0;
+	};
+}
+
 function setSidebarHeight() {
 	var winHeight = $(window).height();
 	var height = winHeight - 88;
@@ -74,18 +81,18 @@ function build_hash(data) {
 	app.controller('MyAppController', ['$scope','$http', function($scope, $http) {
 		$scope.update_breadcrumb = function() {
 			$scope.breadcrumb = window.location.hash.split('/').slice(1);
+			$scope.path = '/' + $scope.breadcrumb.join('/');
+			console.log($scope.path);
+		}
 
-			if (!$scope.map) {
-				return;
-			}
-			
+		$scope.manage_nav_buttons = function() {
 			var content_path = $scope.map.content.map(function(x) {return x.path;});
 			var parent_breadcrumb = $scope.breadcrumb.slice(0);
-			
+
 			var current = parent_breadcrumb.pop();
 			var index = content_path.indexOf(current);
-			
-			
+
+
 			$scope.chapter_previous = undefined;
 			if (index > 0) {
 				var tmp = parent_breadcrumb.slice(0);
@@ -99,20 +106,25 @@ function build_hash(data) {
 				tmp.push(content_path[index + 1]);
 				$scope.chapter_next = '#/' + tmp.join('/');
 			}
-		}
-		
+		};
+
+		$scope.$on('$routeChangeStart', function(next, current) {
+			$scope.update_breadcrumb();
+		});
+
 		$scope.getData = function(url) {
+			$scope.map = {};
 			$http.get(url)
 				.success(function(data) {
 					$scope.map = data;
 					$scope.hash = build_hash(data);
-					$scope.update_breadcrumb();
+					$scope.manage_nav_buttons();
 				})
 				.error(function() {
 					alert('Cannot find "' + url + '"...');
 				});
 		};
-		
+
 		$scope.now = new Date();
 		scope = $scope;
 		$scope.window = window;
